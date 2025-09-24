@@ -3,19 +3,19 @@ include $_SERVER['DOCUMENT_ROOT'] . '/../model/DbEgyTalk.php';
 $DbEgyTalk = new DbEgyTalk;
 
 $userName = $_GET['searchUsr'] ?? " ";
-$posts = $DbEgyTalk->searchFriend($userName);
+$friends = $DbEgyTalk->searchFriend($userName);
 
-if ($posts) {
-    foreach ($posts as $post) {
+if ($friends) {
+    foreach ($friends as $friend) {
         echo "<article>";
-        echo '<p style="fontsize: 4rem;"><strong>' . $post['username'] . "<br> -" . $post['firstname'] . " " . $post['surname'] . "</strong></p>";
+        echo '<p style="fontsize: 4rem;"><strong>' . $friend['username'] . "<br> -" . $friend['firstname'] . " " . $friend['surname'] . "</strong></p>";
 ?>
         <form action="index.php?get=friends" method="post">
             <button type="submit" class="search">Add friend</button>
-            <input type="hidden" name="firstName" value="<?php echo $post['firstname']; ?>">
-            <input type="hidden" name="surName" value="<?php echo $post['surname']; ?>">
-            <input type="hidden" name="userName" value="<?php echo $post['username']; ?>">
-            <input type="hidden" name="uid2" value="<?php echo $post['uid']; ?>">
+            <input type="hidden" name="firstName" value="<?php echo $friend['firstname']; ?>">
+            <input type="hidden" name="surName" value="<?php echo $friend['surname']; ?>">
+            <input type="hidden" name="userName" value="<?php echo $friend['username']; ?>">
+            <input type="hidden" name="uid2" value="<?php echo $friend['uid']; ?>">
         </form>
 <?php
         echo '---------------------------------------------------------------------------------------------------------------------------------------------------';
@@ -25,6 +25,4 @@ if ($posts) {
     $_SESSION['count'] = 0;
     echo '<p> Det finns inga tillgängliga vänner med denna namn. </p>';
 }
-
-
 ?>

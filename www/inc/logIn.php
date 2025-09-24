@@ -6,15 +6,16 @@ if (!empty($_POST)) {
     $username = $_POST['userName'] ?? "";
     $password = $_POST['password'] ?? "";
 
-    $user = $DbEgyTalk->logIn($username, $password);
+    $response = $DbEgyTalk->logIn($username, $password);
 
-    if ($user) {
+    if ($response) {
         session_regenerate_id(true);
 
         $_SESSION['uid'] = true;
-        $_SESSION['uid'] = $user['uid'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['name'] = $user['name'];
+        $_SESSION['uid'] = $response['uid'];
+        $_SESSION['username'] = $response['username'];
+        $_SESSION['name'] = $response['name'];
+        
         header("Location: index.php");
     } else {
         header("Location: index.php?type=login");

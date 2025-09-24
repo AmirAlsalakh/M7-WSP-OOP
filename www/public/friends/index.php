@@ -15,19 +15,19 @@ if (!empty($_POST['uid2'])) {
     }
 }
 
-$posts = $DbEgyTalk->selectFriend();
+$friends = $DbEgyTalk->selectFriend();
 
 if (count($posts) === 0) {
     echo "<p>Du har inga kompisar ännu.</p>";
 } else {
-    foreach ($posts as $post) {
+    foreach ($friends as $friend) {
         echo "<p>Kompis:</p>";
 
-        echo "<p>Förnamn: " . htmlspecialchars($post['firstname']) . "</p>";
+        echo "<p>Förnamn: " . htmlspecialchars($friend['firstname']) . "</p>";
 
-        echo "<p>Efternamn: " . htmlspecialchars($post['surname']) . "</p>";
+        echo "<p>Efternamn: " . htmlspecialchars($friend['surname']) . "</p>";
 
-        echo "<p>Användarnamn: " . htmlspecialchars($post['username']) . "</p>";
+        echo "<p>Användarnamn: " . htmlspecialchars($friend['username']) . "</p>";
 
         echo "----------------------------------------------<br>";
     }

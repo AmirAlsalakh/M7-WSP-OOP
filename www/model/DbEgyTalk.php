@@ -48,7 +48,7 @@ class DbEgyTalk
 
     function signUp($firstName, $surName, $userName, $password)
     {
-        $final = true;
+        $result = true;
         $sqlkod = "INSERT INTO user(uid, firstname, surname, username, password) VALUES(UUID(), :fn, :sn,:user,:pwd)";
 
         $stmt = $this->db->prepare($sqlkod);
@@ -60,10 +60,10 @@ class DbEgyTalk
 
         try {
             $stmt->execute();
-            return $final;
+            return $result;
         } catch (Exception $e) {
-            $final = !$final;
-            return $final;
+            $result = !$result;
+            return $result;
         }
     }
 
@@ -79,13 +79,13 @@ class DbEgyTalk
 
         $_SESSION['count'] = $stmt->rowCount();
 
-        $posts = [];
+        $friends = [];
 
         if ($stmt->rowCount() > 0) {
-            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $posts;
+            $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $friends;
         } else {
-            return $posts;
+            return $friends;
         }
     }
 
@@ -151,17 +151,19 @@ class DbEgyTalk
 
     function checkFriend($post)
     {
-        $check = $this->db->prepare("SELECT 1 FROM friend WHERE uid = :uid AND uid2 = :uid2");
+        $check = true;
+        $stmt = $this->db->prepare("SELECT 1 FROM friend WHERE uid = :uid AND uid2 = :uid2");
 
-        $check->bindValue(':uid', $_SESSION['uid']);
-        $check->bindValue(':uid2', $post['uid2']);
+        $stmt->bindValue(':uid', $_SESSION['uid']);
+        $stmt->bindValue(':uid2', $post['uid2']);
 
-        $check->execute();
+        $stmt->execute();
 
-        if ($check->rowCount() === 0) {
-            return true;
+        if ($stmt->rowCount() === 0) {
+            return $check;
         } else {
-            return false;
+            $check = !$check;
+            return $check;
         }
     }
 
@@ -182,27 +184,27 @@ class DbEgyTalk
         $stmt->bindValue(':uid', $_SESSION['uid']);
         $stmt->execute();
 
-        $delateUser = [];
+        $deleteCheck = [];
         if ($stmt->rowCount() === 1) {
-            $delateUser = $stmt->fetch(PDO::FETCH_ASSOC);
+            $deleteCheck = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($_SESSION['username'] == $userName) {
-                if (password_verify($password, $delateUser['password'])) {
-                    return $delateUser;
+                if (password_verify($password, $deleteCheck['password'])) {
+                    return $deleteCheck;
                 } else {
-                    $delateUser = [];
-                    return $delateUser;
+                    $deleteCheck = [];
+                    return $deleteCheck;
                 }
             } else {
-                $delateUser = [];
-                return $delateUser;
+                $deleteCheck = [];
+                return $deleteCheck;
             }
         } else {
-            return $delateUser;
+            return $deleteCheck;
         }
     }
 
-    function deleateUser()
+    function deleteUser()
     {
         $stmt = $this->db->prepare("DELETE user, comment, friend FROM user LEFT JOIN comment ON user.uid = comment.uid LEFT JOIN friend ON user.uid = friend.uid WHERE user.uid = :uid");
         $stmt->bindValue(':uid', $_SESSION['uid']);

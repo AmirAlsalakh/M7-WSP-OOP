@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $password = $_POST['password'];
 
-    $decision = $DbEgyTalk->checkToDeleteUser($userName, $password);
+    $deleteCheck = $DbEgyTalk->checkToDeleteUser($userName, $password);
 
-    if ($decision) {
-        $DbEgyTalk->deleateUser();
+    if ($deleteCheck) {
+        $DbEgyTalk->deleteUser();
         header('location: logOut/index.php');
     }else{
         header('location: index.php?get=preferences');
