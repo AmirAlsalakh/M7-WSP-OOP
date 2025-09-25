@@ -123,7 +123,7 @@ class DbEgyTalk
         }
     }
 
-    function selectFriend()
+    function selectFriends()
     {
         $sql = "SELECT friend.* , user.firstname, user.surname, user.username FROM `friend` JOIN `user` ON friend.uid2 = user.uid WHERE friend.uid = :uid AND user.uid != :uid ";
 
@@ -149,13 +149,13 @@ class DbEgyTalk
         $stmt->execute();
     }
 
-    function checkFriend($post)
+    function checkFriend($friend)
     {
         $check = true;
         $stmt = $this->db->prepare("SELECT 1 FROM friend WHERE uid = :uid AND uid2 = :uid2");
 
         $stmt->bindValue(':uid', $_SESSION['uid']);
-        $stmt->bindValue(':uid2', $post['uid2']);
+        $stmt->bindValue(':uid2', $friend['uid2']);
 
         $stmt->execute();
 
@@ -236,6 +236,16 @@ class DbEgyTalk
         $stmt->bindValue(":post_txt", $klotter);
         $stmt->bindValue(":date", date("Y-m-d H:i:s"));
 
+        $stmt->execute();
+    }
+
+    function deleteFriend($friend)
+    {
+        $sql = "DELETE friend.* FROM `friend` WHERE friend.uid = :uid AND friend.uid2 = :uid2 ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':uid', $_SESSION['uid']);
+        $stmt->bindValue(':uid2', $friend['friendUid']);
         $stmt->execute();
     }
 }
